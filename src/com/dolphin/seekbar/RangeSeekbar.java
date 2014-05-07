@@ -40,7 +40,7 @@ import com.dolphin.multitouchseekbar.R;
  */
 public class RangeSeekbar extends View {
 
-    private static final String DEBUG_TAG = "DoubleCursorSeekbar.java";
+    private static final String DEBUG_TAG = "RangeSeekbar.java";
 
     private static final int DURATION = 200;
 
