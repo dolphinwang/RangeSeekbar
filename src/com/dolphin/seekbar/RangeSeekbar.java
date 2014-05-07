@@ -42,7 +42,7 @@ public class RangeSeekbar extends View {
 
     private static final String DEBUG_TAG = "RangeSeekbar.java";
 
-    private static final int DURATION = 200;
+    private static final int DURATION = 100;
 
     private enum DIRECTION {
         LEFT, RIGHT;
@@ -130,6 +130,8 @@ public class RangeSeekbar extends View {
     private boolean mRightHited;
 
     private int mRightBoundary;
+
+    private OnCursorChangeListener mListener;
 
     public RangeSeekbar(Context context) {
         this(context, null, 0);
@@ -447,10 +449,13 @@ public class RangeSeekbar extends View {
                 }
 
                 // step 3: Move to.
-                final int fromX = (int) (mLeftCursorIndex * mPartLength);
                 if (!mLeftScroller.computeScrollOffset()) {
+                    final int fromX = (int) (mLeftCursorIndex * mPartLength);
+
                     mLeftScroller.startScroll(fromX, 0, mLeftCursorNextIndex
                             * mPartLength - fromX, 0, DURATION);
+
+                    triggleCallback(true, mLeftCursorNextIndex);
                 }
             }
 
@@ -482,10 +487,13 @@ public class RangeSeekbar extends View {
                     }
                 }
 
-                final int fromX = (int) (mRightCursorIndex * mPartLength);
                 if (!mRightScroller.computeScrollOffset()) {
+                    final int fromX = (int) (mRightCursorIndex * mPartLength);
+
                     mRightScroller.startScroll(fromX, 0, mRightCursorNextIndex
                             * mPartLength - fromX, 0, DURATION);
+
+                    triggleCallback(false, mRightCursorNextIndex);
                 }
             }
 
@@ -537,12 +545,14 @@ public class RangeSeekbar extends View {
                     if (mRightCursorIndex <= maxMarkIndex - 1) {
                         mRightCursorNextIndex = (int) (mRightCursorIndex + 1);
 
-                        final int fromX = (int) (mRightCursorIndex * mPartLength);
                         if (!mRightScroller.computeScrollOffset()) {
+                            final int fromX = (int) (mRightCursorIndex * mPartLength);
+
                             mRightScroller
                                     .startScroll(fromX, 0,
                                             mRightCursorNextIndex * mPartLength
                                                     - fromX, 0, DURATION);
+                            triggleCallback(false, mRightCursorNextIndex);
                         }
                     }
                 }
@@ -593,11 +603,13 @@ public class RangeSeekbar extends View {
                 } else {
                     if (mLeftCursorIndex >= 1) {
                         mLeftCursorNextIndex = (int) (mLeftCursorIndex - 1);
-                        final int fromX = (int) (mLeftCursorIndex * mPartLength);
+
                         if (!mLeftScroller.computeScrollOffset()) {
+                            final int fromX = (int) (mLeftCursorIndex * mPartLength);
                             mLeftScroller.startScroll(fromX, 0,
                                     mLeftCursorNextIndex * mPartLength - fromX,
                                     0, DURATION);
+                            triggleCallback(true, mLeftCursorNextIndex);
                         }
                     }
                 }
@@ -633,6 +645,20 @@ public class RangeSeekbar extends View {
         }
     }
 
+    private void triggleCallback(boolean isLeft, int location) {
+        if (mListener == null) {
+            return;
+        }
+
+        if (isLeft) {
+            mListener.onLeftCursorChanged(location,
+                    mTextArray[location].toString());
+        } else {
+            mListener.onRightCursorChanged(location,
+                    mTextArray[location].toString());
+        }
+    }
+
     public void setLeftSelection(int partIndex) {
         if (partIndex >= mTextArray.length - 1 || partIndex <= 0) {
             throw new IllegalArgumentException(
@@ -647,6 +673,7 @@ public class RangeSeekbar extends View {
             final int leftFromX = (int) (mLeftCursorIndex * mPartLength);
             mLeftScroller.startScroll(leftFromX, 0, mLeftCursorNextIndex
                     * mPartLength - leftFromX, 0, DURATION);
+            triggleCallback(true, mLeftCursorNextIndex);
 
             if (mRightCursorIndex <= mLeftCursorNextIndex) {
                 if (!mRightScroller.isFinished()) {
@@ -656,6 +683,7 @@ public class RangeSeekbar extends View {
                 final int rightFromX = (int) (mRightCursorIndex * mPartLength);
                 mRightScroller.startScroll(rightFromX, 0, mRightCursorNextIndex
                         * mPartLength - rightFromX, 0, DURATION);
+                triggleCallback(false, mRightCursorNextIndex);
             }
 
             invalidate();
@@ -677,6 +705,7 @@ public class RangeSeekbar extends View {
             final int rightFromX = (int) (mPartLength * mRightCursorIndex);
             mRightScroller.startScroll(rightFromX, 0, mRightCursorNextIndex
                     * mPartLength - rightFromX, 0, DURATION);
+            triggleCallback(false, mRightCursorNextIndex);
 
             if (mLeftCursorIndex >= mRightCursorNextIndex) {
                 if (!mLeftScroller.isFinished()) {
@@ -687,6 +716,7 @@ public class RangeSeekbar extends View {
                 final int leftFromX = (int) (mLeftCursorIndex * mPartLength);
                 mLeftScroller.startScroll(leftFromX, 0, mLeftCursorNextIndex
                         * mPartLength - leftFromX, 0, DURATION);
+                triggleCallback(true, mLeftCursorNextIndex);
             }
             invalidate();
         }
@@ -802,5 +832,15 @@ public class RangeSeekbar extends View {
         mLeftCursorIndex = 0;
         mRightCursorIndex = mTextArray.length - 1;
         mRightCursorNextIndex = (int) mRightCursorIndex;
+    }
+
+    public void setOnCursorChangeListener(OnCursorChangeListener l) {
+        mListener = l;
+    }
+
+    public interface OnCursorChangeListener {
+        void onLeftCursorChanged(int location, String textMark);
+
+        void onRightCursorChanged(int location, String textMark);
     }
 }
