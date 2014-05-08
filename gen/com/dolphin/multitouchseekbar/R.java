@@ -12,6 +12,14 @@ public final class R {
         public static final int markArray=0x7f040000;
     }
     public static final class attr {
+        /** <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+         */
+        public static final int autoMoveDuration=0x7f01000a;
         /** <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
 or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>".
          */
@@ -155,6 +163,7 @@ containing a value of this type.
            <colgroup align="left" />
            <colgroup align="left" />
            <tr><th>Attribute</th><th>Description</th></tr>
+           <tr><td><code>{@link #RangeSeekbar_autoMoveDuration com.dolphin.multitouchseekbar:autoMoveDuration}</code></td><td></td></tr>
            <tr><td><code>{@link #RangeSeekbar_leftCursorBackground com.dolphin.multitouchseekbar:leftCursorBackground}</code></td><td></td></tr>
            <tr><td><code>{@link #RangeSeekbar_markTextArray com.dolphin.multitouchseekbar:markTextArray}</code></td><td></td></tr>
            <tr><td><code>{@link #RangeSeekbar_rightCursorBackground com.dolphin.multitouchseekbar:rightCursorBackground}</code></td><td></td></tr>
@@ -166,6 +175,7 @@ containing a value of this type.
            <tr><td><code>{@link #RangeSeekbar_textColorSelected com.dolphin.multitouchseekbar:textColorSelected}</code></td><td></td></tr>
            <tr><td><code>{@link #RangeSeekbar_textSize com.dolphin.multitouchseekbar:textSize}</code></td><td></td></tr>
            </table>
+           @see #RangeSeekbar_autoMoveDuration
            @see #RangeSeekbar_leftCursorBackground
            @see #RangeSeekbar_markTextArray
            @see #RangeSeekbar_rightCursorBackground
@@ -180,8 +190,22 @@ containing a value of this type.
         public static final int[] RangeSeekbar = {
             0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003,
             0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007,
-            0x7f010008, 0x7f010009
+            0x7f010008, 0x7f010009, 0x7f01000a
         };
+        /**
+          <p>This symbol is the offset where the {@link com.dolphin.multitouchseekbar.R.attr#autoMoveDuration}
+          attribute's value can be found in the {@link #RangeSeekbar} array.
+
+
+          <p>Must be an integer value, such as "<code>100</code>".
+<p>This may also be a reference to a resource (in the form
+"<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
+theme attribute (in the form
+"<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
+containing a value of this type.
+          @attr name com.dolphin.multitouchseekbar:autoMoveDuration
+        */
+        public static final int RangeSeekbar_autoMoveDuration = 10;
         /**
           <p>This symbol is the offset where the {@link com.dolphin.multitouchseekbar.R.attr#leftCursorBackground}
           attribute's value can be found in the {@link #RangeSeekbar} array.

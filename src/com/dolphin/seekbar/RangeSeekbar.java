@@ -42,11 +42,13 @@ public class RangeSeekbar extends View {
 
     private static final String DEBUG_TAG = "RangeSeekbar.java";
 
-    private static final int DURATION = 100;
+    private static final int DEFAULT_DURATION = 100;
 
     private enum DIRECTION {
         LEFT, RIGHT;
     }
+
+    private int mDuration;
 
     /**
      * Scrollers for left and right cursor
@@ -173,6 +175,9 @@ public class RangeSeekbar extends View {
 
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.RangeSeekbar);
+
+        mDuration = a.getInteger(R.styleable.RangeSeekbar_autoMoveDuration,
+                DEFAULT_DURATION);
 
         mLeftCursorBG = a
                 .getDrawable(R.styleable.RangeSeekbar_leftCursorBackground);
@@ -453,7 +458,7 @@ public class RangeSeekbar extends View {
                     final int fromX = (int) (mLeftCursorIndex * mPartLength);
 
                     mLeftScroller.startScroll(fromX, 0, mLeftCursorNextIndex
-                            * mPartLength - fromX, 0, DURATION);
+                            * mPartLength - fromX, 0, mDuration);
 
                     triggleCallback(true, mLeftCursorNextIndex);
                 }
@@ -491,7 +496,7 @@ public class RangeSeekbar extends View {
                     final int fromX = (int) (mRightCursorIndex * mPartLength);
 
                     mRightScroller.startScroll(fromX, 0, mRightCursorNextIndex
-                            * mPartLength - fromX, 0, DURATION);
+                            * mPartLength - fromX, 0, mDuration);
 
                     triggleCallback(false, mRightCursorNextIndex);
                 }
@@ -535,7 +540,8 @@ public class RangeSeekbar extends View {
                 // Check whether right cursor is in "Touch" mode( if in touch
                 // mode, represent that we can not move it at will), or right
                 // cursor reach the boundary.
-                if (mRightHited || mRightCursorIndex == mTextArray.length - 1) {
+                if (mRightHited || mRightCursorIndex == mTextArray.length - 1
+                        || mRightScroller.computeScrollOffset()) {
                     // Just move left cursor to the left side of right one.
                     deltaX = mRightCursorRect.left - mLeftCursorRect.right;
                 } else {
@@ -551,7 +557,7 @@ public class RangeSeekbar extends View {
                             mRightScroller
                                     .startScroll(fromX, 0,
                                             mRightCursorNextIndex * mPartLength
-                                                    - fromX, 0, DURATION);
+                                                    - fromX, 0, mDuration);
                             triggleCallback(false, mRightCursorNextIndex);
                         }
                     }
@@ -598,7 +604,8 @@ public class RangeSeekbar extends View {
             }
 
             if (mRightCursorRect.left + deltaX < mLeftCursorRect.right) {
-                if (mLeftHited || mLeftCursorIndex == 0) {
+                if (mLeftHited || mLeftCursorIndex == 0
+                        || mLeftScroller.computeScrollOffset()) {
                     deltaX = mLeftCursorRect.right - mRightCursorRect.left;
                 } else {
                     if (mLeftCursorIndex >= 1) {
@@ -608,7 +615,7 @@ public class RangeSeekbar extends View {
                             final int fromX = (int) (mLeftCursorIndex * mPartLength);
                             mLeftScroller.startScroll(fromX, 0,
                                     mLeftCursorNextIndex * mPartLength - fromX,
-                                    0, DURATION);
+                                    0, mDuration);
                             triggleCallback(true, mLeftCursorNextIndex);
                         }
                     }
@@ -672,7 +679,7 @@ public class RangeSeekbar extends View {
             mLeftCursorNextIndex = partIndex;
             final int leftFromX = (int) (mLeftCursorIndex * mPartLength);
             mLeftScroller.startScroll(leftFromX, 0, mLeftCursorNextIndex
-                    * mPartLength - leftFromX, 0, DURATION);
+                    * mPartLength - leftFromX, 0, mDuration);
             triggleCallback(true, mLeftCursorNextIndex);
 
             if (mRightCursorIndex <= mLeftCursorNextIndex) {
@@ -682,7 +689,7 @@ public class RangeSeekbar extends View {
                 mRightCursorNextIndex = mLeftCursorNextIndex + 1;
                 final int rightFromX = (int) (mRightCursorIndex * mPartLength);
                 mRightScroller.startScroll(rightFromX, 0, mRightCursorNextIndex
-                        * mPartLength - rightFromX, 0, DURATION);
+                        * mPartLength - rightFromX, 0, mDuration);
                 triggleCallback(false, mRightCursorNextIndex);
             }
 
@@ -704,7 +711,7 @@ public class RangeSeekbar extends View {
             mRightCursorNextIndex = partIndex;
             final int rightFromX = (int) (mPartLength * mRightCursorIndex);
             mRightScroller.startScroll(rightFromX, 0, mRightCursorNextIndex
-                    * mPartLength - rightFromX, 0, DURATION);
+                    * mPartLength - rightFromX, 0, mDuration);
             triggleCallback(false, mRightCursorNextIndex);
 
             if (mLeftCursorIndex >= mRightCursorNextIndex) {
@@ -715,7 +722,7 @@ public class RangeSeekbar extends View {
                 mLeftCursorNextIndex = mRightCursorNextIndex - 1;
                 final int leftFromX = (int) (mLeftCursorIndex * mPartLength);
                 mLeftScroller.startScroll(leftFromX, 0, mLeftCursorNextIndex
-                        * mPartLength - leftFromX, 0, DURATION);
+                        * mPartLength - leftFromX, 0, mDuration);
                 triggleCallback(true, mLeftCursorNextIndex);
             }
             invalidate();
