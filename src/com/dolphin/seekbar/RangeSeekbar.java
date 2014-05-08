@@ -845,6 +845,12 @@ public class RangeSeekbar extends View {
         initTextWithArray();
     }
 
+    /**
+     * This method should be called after {@link #setTextMarkSize(int)}, because
+     * view will measure size of text mark by paint.
+     * 
+     * @param size
+     */
     public void setTextMarkSize(int size) {
         if (size < 0) {
             return;
