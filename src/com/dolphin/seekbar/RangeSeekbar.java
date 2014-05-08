@@ -841,6 +841,14 @@ public class RangeSeekbar extends View {
         mRightCursorNextIndex = (int) mRightCursorIndex;
     }
 
+    public int getLeftCursorIndex() {
+        return (int) mLeftCursorIndex;
+    }
+
+    public int getRightCursorIndex() {
+        return (int) mRightCursorIndex;
+    }
+
     public void setOnCursorChangeListener(OnCursorChangeListener l) {
         mListener = l;
     }
