@@ -162,6 +162,7 @@ public class RangeSeekbar extends View {
         mRightScroller = new Scroller(context, new DecelerateInterpolator());
 
         initPaint();
+        initTextWithArray();
 
         setWillNotDraw(false);
         setFocusable(true);
@@ -208,9 +209,6 @@ public class RangeSeekbar extends View {
             mLeftCursorIndex = 0;
             mRightCursorIndex = mTextArray.length - 1;
             mRightCursorNextIndex = (int) mRightCursorIndex;
-        } else {
-            throw new IllegalArgumentException(
-                    "Text array is null, how can i do...");
         }
 
         a.recycle();
@@ -222,10 +220,15 @@ public class RangeSeekbar extends View {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Style.FILL);
         mPaint.setTextSize(mTextSize);
+    }
 
-        final int length = mTextArray.length;
-        for (int i = 0; i < length; i++) {
-            mTextWidthArray[i] = mPaint.measureText(mTextArray[i].toString());
+    private void initTextWithArray() {
+        if (mTextArray != null && mTextArray.length > 0) {
+            final int length = mTextArray.length;
+            for (int i = 0; i < length; i++) {
+                mTextWidthArray[i] = mPaint.measureText(mTextArray[i]
+                        .toString());
+            }
         }
     }
 
@@ -839,6 +842,16 @@ public class RangeSeekbar extends View {
         mLeftCursorIndex = 0;
         mRightCursorIndex = mTextArray.length - 1;
         mRightCursorNextIndex = (int) mRightCursorIndex;
+        initTextWithArray();
+    }
+
+    public void setTextMarkSize(int size) {
+        if (size < 0) {
+            return;
+        }
+
+        mTextSize = size;
+        mPaint.setTextSize(size);
     }
 
     public int getLeftCursorIndex() {
