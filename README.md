@@ -18,6 +18,7 @@ RangeSeekbar support user to set difference parameters.
 		8. textColorSelected:    Color of text mark in selected state.
 		9. seekbarColorNormal:   Similar with textColorNormal.
 		10.seekbarColorSelected: Similar with textColorSelected.
+		11.autoMoveDuration:     Time when a cursor move to a mark index without touch.
 		
 		Users can also set these in java code.
 		
