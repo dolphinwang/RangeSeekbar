@@ -162,7 +162,7 @@ public class RangeSeekbar extends View {
         mRightScroller = new Scroller(context, new DecelerateInterpolator());
 
         initPaint();
-        initTextWithArray();
+        initTextWidthArray();
 
         setWillNotDraw(false);
         setFocusable(true);
@@ -222,7 +222,7 @@ public class RangeSeekbar extends View {
         mPaint.setTextSize(mTextSize);
     }
 
-    private void initTextWithArray() {
+    private void initTextWidthArray() {
         if (mTextArray != null && mTextArray.length > 0) {
             final int length = mTextArray.length;
             for (int i = 0; i < length; i++) {
@@ -234,20 +234,22 @@ public class RangeSeekbar extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
         final int leftPointerH = mLeftCursorBG.getIntrinsicHeight();
         final int rightPointerH = mRightCursorBG.getIntrinsicHeight();
 
         // Get max height between left and right cursor.
-        final int maxOfPointer = Math.max(leftPointerH, rightPointerH);
+        final int maxOfCursor = Math.max(leftPointerH, rightPointerH);
         // Than get max height between seekbar and cursor.
-        final int maxOfPointerAndSeekbar = Math.max(mSeekbarHeight,
-                maxOfPointer);
-        // So we get the need height.
-        int heightNeeded = maxOfPointerAndSeekbar + mMarginBetween + mTextSize
+        final int maxOfCursorAndSeekbar = Math.max(mSeekbarHeight,
+                maxOfCursor);
+        // So we get the needed height.
+        int heightNeeded = maxOfCursorAndSeekbar + mMarginBetween + mTextSize
                 + mPaddingRect.top + mPaddingRect.bottom;
 
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightNeeded,
-                MeasureSpec.EXACTLY);
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(
+                Math.max(heightSize, heightNeeded), MeasureSpec.EXACTLY);
 
         final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 
@@ -739,6 +741,9 @@ public class RangeSeekbar extends View {
         }
 
         mLeftCursorBG = drawable;
+
+        requestLayout();
+        invalidate();
     }
 
     public void setLeftCursorBackground(int resID) {
@@ -748,6 +753,9 @@ public class RangeSeekbar extends View {
         }
 
         mLeftCursorBG = getResources().getDrawable(resID);
+
+        requestLayout();
+        invalidate();
     }
 
     public void setRightCursorBackground(Drawable drawable) {
@@ -757,6 +765,9 @@ public class RangeSeekbar extends View {
         }
 
         mRightCursorBG = drawable;
+
+        requestLayout();
+        invalidate();
     }
 
     public void setRightCursorBackground(int resID) {
@@ -766,6 +777,9 @@ public class RangeSeekbar extends View {
         }
 
         mRightCursorBG = getResources().getDrawable(resID);
+
+        requestLayout();
+        invalidate();
     }
 
     public void setTextMarkColorNormal(int color) {
@@ -775,6 +789,8 @@ public class RangeSeekbar extends View {
         }
 
         mTextColorNormal = color;
+
+        invalidate();
     }
 
     public void setTextMarkColorSelected(int color) {
@@ -784,6 +800,8 @@ public class RangeSeekbar extends View {
         }
 
         mTextColorSelected = color;
+
+        invalidate();
     }
 
     public void setSeekbarColorNormal(int color) {
@@ -793,6 +811,8 @@ public class RangeSeekbar extends View {
         }
 
         mSeekbarColorNormal = color;
+
+        invalidate();
     }
 
     public void setSeekbarColorSelected(int color) {
@@ -802,10 +822,12 @@ public class RangeSeekbar extends View {
         }
 
         mSeekbarColorSelected = color;
+
+        invalidate();
     }
 
     /**
-     * In pixels
+     * In pixels. Users should call this method before view is added to parent.
      * 
      * @param height
      */
@@ -830,8 +852,17 @@ public class RangeSeekbar extends View {
         }
 
         mMarginBetween = space;
+
+        requestLayout();
+        invalidate();
     }
 
+    /**
+     * This method should be called after {@link #setTextMarkSize(int)}, because
+     * view will measure size of text mark by paint.
+     * 
+     * @param size
+     */
     public void setTextMarks(CharSequence... marks) {
         if (marks == null || marks.length == 0) {
             throw new IllegalArgumentException(
@@ -842,14 +873,17 @@ public class RangeSeekbar extends View {
         mLeftCursorIndex = 0;
         mRightCursorIndex = mTextArray.length - 1;
         mRightCursorNextIndex = (int) mRightCursorIndex;
-        initTextWithArray();
+        initTextWidthArray();
+
+        requestLayout();
+        invalidate();
     }
 
     /**
-     * This method should be called after {@link #setTextMarkSize(int)}, because
-     * view will measure size of text mark by paint.
+     * Users should call this method before view is added to parent.
      * 
      * @param size
+     *            in pixels
      */
     public void setTextMarkSize(int size) {
         if (size < 0) {
