@@ -15,6 +15,7 @@
  */
 package com.dolphin.seekbar;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -24,6 +25,7 @@ import android.graphics.Paint.Style;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,6 +40,7 @@ import com.dolphin.multitouchseekbar.R;
  * @author dolphinWang
  * @time 2014/05/07
  */
+@TargetApi(Build.VERSION_CODES.FROYO)
 public class RangeSeekbar extends View {
 
     private static final String DEBUG_TAG = "RangeSeekbar.java";
@@ -156,7 +159,9 @@ public class RangeSeekbar extends View {
         mSeekbarRect = new RectF();
         mSeekbarRectSelected = new RectF();
 
-        mTextWidthArray = new float[mTextArray.length];
+        if (mTextArray != null) {
+            mTextWidthArray = new float[mTextArray.length];
+        }
 
         mLeftScroller = new Scroller(context, new DecelerateInterpolator());
         mRightScroller = new Scroller(context, new DecelerateInterpolator());
@@ -242,8 +247,7 @@ public class RangeSeekbar extends View {
         // Get max height between left and right cursor.
         final int maxOfCursor = Math.max(leftPointerH, rightPointerH);
         // Than get max height between seekbar and cursor.
-        final int maxOfCursorAndSeekbar = Math.max(mSeekbarHeight,
-                maxOfCursor);
+        final int maxOfCursorAndSeekbar = Math.max(mSeekbarHeight, maxOfCursor);
         // So we get the needed height.
         int heightNeeded = maxOfCursorAndSeekbar + mMarginBetween + mTextSize
                 + mPaddingRect.top + mPaddingRect.bottom;
@@ -873,6 +877,7 @@ public class RangeSeekbar extends View {
         mLeftCursorIndex = 0;
         mRightCursorIndex = mTextArray.length - 1;
         mRightCursorNextIndex = (int) mRightCursorIndex;
+        mTextWidthArray = new float[marks.length];
         initTextWidthArray();
 
         requestLayout();
