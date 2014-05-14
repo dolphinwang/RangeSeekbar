@@ -787,7 +787,7 @@ public class RangeSeekbar extends View {
     }
 
     public void setTextMarkColorNormal(int color) {
-        if (color <= 0 || color == Color.TRANSPARENT) {
+        if (color == Color.TRANSPARENT) {
             throw new IllegalArgumentException(
                     "Do you want to make text mark invisible?");
         }
@@ -798,7 +798,7 @@ public class RangeSeekbar extends View {
     }
 
     public void setTextMarkColorSelected(int color) {
-        if (color <= 0 || color == Color.TRANSPARENT) {
+        if (color == Color.TRANSPARENT) {
             throw new IllegalArgumentException(
                     "Do you want to make text mark invisible?");
         }
