@@ -294,8 +294,15 @@ public class RangeSeekbar extends View {
             final String text2draw = mTextArray[i].toString();
             final float textWidth = mTextWidthArray[i];
 
-            float textDrawLeft = mSeekbarRect.left + i * mPartLength
-                    - textWidth / 2;
+            float textDrawLeft = 0;
+            // The last text mark's draw location should be adjust.
+            if (i == length - 1) {
+                textDrawLeft = mSeekbarRect.right
+                        + (mRightCursorBG.getIntrinsicWidth() / 2) - textWidth;
+            } else {
+                textDrawLeft = mSeekbarRect.left + i * mPartLength - textWidth
+                        / 2;
+            }
 
             canvas.drawText(text2draw, textDrawLeft, mPaddingRect.top
                     + mTextSize, mPaint);
