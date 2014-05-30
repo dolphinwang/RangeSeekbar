@@ -45,6 +45,7 @@ public class RangeSeekbar extends View {
 
     private static final String DEBUG_TAG = "RangeSeekbar.java";
 
+    private static final int CLICK_MOVE_DELTA = 10;
     private static final int DEFAULT_DURATION = 100;
 
     private enum DIRECTION {
@@ -138,6 +139,11 @@ public class RangeSeekbar extends View {
 
     private OnCursorChangeListener mListener;
 
+    private Rect[] mClickRectArray;
+    private int mClickIndex = -1;
+    private int mClickDownLastX = -1;
+    private int mClickDownLastY = -1;
+
     public RangeSeekbar(Context context) {
         this(context, null, 0);
     }
@@ -161,6 +167,7 @@ public class RangeSeekbar extends View {
 
         if (mTextArray != null) {
             mTextWidthArray = new float[mTextArray.length];
+            mClickRectArray = new Rect[mTextArray.length];
         }
 
         mLeftScroller = new Scroller(context, new DecelerateInterpolator());
@@ -306,6 +313,18 @@ public class RangeSeekbar extends View {
 
             canvas.drawText(text2draw, textDrawLeft, mPaddingRect.top
                     + mTextSize, mPaint);
+
+            Rect rect = mClickRectArray[i];
+            if (rect == null) {
+                rect = new Rect();
+                rect.top = mPaddingRect.top;
+                rect.bottom = rect.top + mTextSize + mMarginBetween
+                        + mSeekbarHeight;
+                rect.left = (int) textDrawLeft;
+                rect.right = (int) (rect.left + textWidth);
+
+                mClickRectArray[i] = rect;
+            }
         }
 
         /*** Draw seekbar ***/
@@ -390,6 +409,9 @@ public class RangeSeekbar extends View {
         case MotionEvent.ACTION_UP:
 
             handleTouchUp(event);
+            mClickIndex = -1;
+            mClickDownLastX = -1;
+            mClickDownLastY = -1;
 
             break;
         }
@@ -425,6 +447,39 @@ public class RangeSeekbar extends View {
             mRightHited = true;
 
             invalidate();
+        } else {
+            // If touch x-y not be contained in cursor,
+            // then we check if it in click areas
+            final int clickBoundaryTop = mClickRectArray[0].top;
+            final int clickBoundaryBottom = mClickRectArray[0].bottom;
+            mClickDownLastX = downX;
+            mClickDownLastY = downY;
+
+            // Step one : if in boundary of total Y.
+            if (downY < clickBoundaryTop || downY > clickBoundaryBottom) {
+                mClickIndex = -1;
+                return;
+            }
+
+            // Step two: find nearest mark in x-axis
+            final int partIndex = (int) ((downX - mSeekbarRect.left) / mPartLength);
+            final int partDelta = (int) ((downX - mSeekbarRect.left) % mPartLength);
+            if (partDelta < mPartLength / 2) {
+                mClickIndex = partIndex;
+            } else if (partDelta > mPartLength / 2) {
+                mClickIndex = partIndex + 1;
+            }
+
+            if (mClickIndex == mLeftCursorIndex
+                    || mClickIndex == mRightCursorIndex) {
+                mClickIndex = -1;
+                return;
+            }
+
+            // Step three: check contain
+            if (!mClickRectArray[mClickIndex].contains(downX, downY)) {
+                mClickIndex = -1;
+            }
         }
     }
 
@@ -524,10 +579,61 @@ public class RangeSeekbar extends View {
             mRightHited = false;
 
             invalidate();
+        } else {
+            final int pointerIndex = event.findPointerIndex(actionID);
+            final int upX = (int) event.getX(pointerIndex);
+            final int upY = (int) event.getY(pointerIndex);
+
+            if (mClickIndex != -1
+                    && mClickRectArray[mClickIndex].contains(upX, upY)) {
+                // Find nearest cursor
+                final float distance2LeftCursor = Math.abs(mLeftCursorIndex
+                        - mClickIndex);
+                final float distance2Right = Math.abs(mRightCursorIndex
+                        - mClickIndex);
+
+                final boolean moveLeft = distance2LeftCursor <= distance2Right;
+                int fromX = 0;
+                if (moveLeft) {
+                    if (!mLeftScroller.computeScrollOffset()) {
+                        mLeftCursorNextIndex = mClickIndex;
+                        fromX = (int) (mLeftCursorIndex * mPartLength);
+                        mLeftScroller.startScroll(fromX, 0,
+                                mLeftCursorNextIndex * mPartLength - fromX, 0,
+                                mDuration);
+
+                        triggleCallback(true, mLeftCursorNextIndex);
+
+                        invalidate();
+                    }
+                } else {
+                    if (!mRightScroller.computeScrollOffset()) {
+                        mRightCursorNextIndex = mClickIndex;
+                        fromX = (int) (mRightCursorIndex * mPartLength);
+                        mRightScroller.startScroll(fromX, 0,
+                                mRightCursorNextIndex * mPartLength - fromX, 0,
+                                mDuration);
+
+                        triggleCallback(false, mRightCursorNextIndex);
+
+                        invalidate();
+                    }
+                }
+            }
         }
     }
 
     private void handleTouchMove(MotionEvent event) {
+        if (mClickIndex != -1) {
+            final int actionIndex = (event.getAction() & MotionEvent.ACTION_POINTER_INDEX_MASK) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
+            final int x = (int) event.getX(actionIndex);
+            final int y = (int) event.getY(actionIndex);
+
+            if (Math.abs(x - mClickDownLastX) > CLICK_MOVE_DELTA
+                    || Math.abs(y - mClickDownLastY) > CLICK_MOVE_DELTA) {
+                mClickIndex = -1;
+            }
+        }
 
         if (mLeftHited && mLeftPointerID != -1) {
 
@@ -885,6 +991,7 @@ public class RangeSeekbar extends View {
         mRightCursorIndex = mTextArray.length - 1;
         mRightCursorNextIndex = (int) mRightCursorIndex;
         mTextWidthArray = new float[marks.length];
+        mClickRectArray = new Rect[mTextArray.length];
         initTextWidthArray();
 
         requestLayout();
