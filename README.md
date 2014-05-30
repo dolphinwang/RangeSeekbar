@@ -2,6 +2,8 @@ RangeSeekbar
 ============
 ### A seekbar contains two cursor and support multi-touch.
 
+![Opps! Screen shot has missed](https://github.com/dolphinwang/RangeSeekbar/raw/master/Screenshot.png)
+
 RangeSeekbar have left and right cursors, user can move cursor to make fliter.
 
 How to use
