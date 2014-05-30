@@ -920,7 +920,7 @@ public class RangeSeekbar extends View {
     }
 
     public void setSeekbarColorNormal(int color) {
-        if (color <= 0 || color == Color.TRANSPARENT) {
+        if (color == Color.TRANSPARENT) {
             throw new IllegalArgumentException(
                     "Do you want to make seekbar invisible?");
         }
