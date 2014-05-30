@@ -45,7 +45,6 @@ public class RangeSeekbar extends View {
 
     private static final String DEBUG_TAG = "RangeSeekbar.java";
 
-    private static final int CLICK_MOVE_DELTA = 10;
     private static final int DEFAULT_DURATION = 100;
 
     private enum DIRECTION {
@@ -629,8 +628,7 @@ public class RangeSeekbar extends View {
             final int x = (int) event.getX(actionIndex);
             final int y = (int) event.getY(actionIndex);
 
-            if (Math.abs(x - mClickDownLastX) > CLICK_MOVE_DELTA
-                    || Math.abs(y - mClickDownLastY) > CLICK_MOVE_DELTA) {
+            if (!mClickRectArray[mClickIndex].contains(x, y)) {
                 mClickIndex = -1;
             }
         }
