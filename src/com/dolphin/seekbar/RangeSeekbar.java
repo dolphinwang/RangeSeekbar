@@ -244,6 +244,16 @@ public class RangeSeekbar extends View {
     }
 
     @Override
+    public void setPadding(int left, int top, int right, int bottom) {
+        super.setPadding(left, top, right, bottom);
+        
+        mPaddingRect.left = getPaddingLeft();
+        mPaddingRect.right = getPaddingRight();
+        mPaddingRect.top = getPaddingTop();
+        mPaddingRect.bottom = getPaddingBottom();
+    }
+
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
 
