@@ -155,9 +155,15 @@ public class RangeSeekbar extends View {
         super(context, attrs, defStyle);
 
         applyConfig(context, attrs);
-
-        mPaddingRect = new Rect(getPaddingLeft(), getPaddingTop(),
-                getPaddingRight(), getPaddingBottom());
+        
+        if(mPaddingRect == null){
+            mPaddingRect = new Rect();
+        }
+        mPaddingRect.left = getPaddingLeft();
+        mPaddingRect.top = getPaddingTop();
+        mPaddingRect.right = getPaddingRight();
+        mPaddingRect.bottom = getPaddingBottom();
+        
         mLeftCursorRect = new Rect();
         mRightCursorRect = new Rect();
 
@@ -247,10 +253,13 @@ public class RangeSeekbar extends View {
     public void setPadding(int left, int top, int right, int bottom) {
         super.setPadding(left, top, right, bottom);
         
-        mPaddingRect.left = getPaddingLeft();
-        mPaddingRect.right = getPaddingRight();
-        mPaddingRect.top = getPaddingTop();
-        mPaddingRect.bottom = getPaddingBottom();
+        if(mPaddingRect == null){
+            mPaddingRect = new Rect();
+        }
+        mPaddingRect.left = left;
+        mPaddingRect.top = top;
+        mPaddingRect.right = right;
+        mPaddingRect.bottom = bottom;
     }
 
     @Override
