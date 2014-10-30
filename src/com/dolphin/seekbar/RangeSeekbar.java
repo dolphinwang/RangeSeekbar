@@ -271,7 +271,7 @@ public class RangeSeekbar extends View {
 
         // Get max height between left and right cursor.
         final int maxOfCursor = Math.max(leftPointerH, rightPointerH);
-        // Than get max height between seekbar and cursor.
+        // Then get max height between seekbar and cursor.
         final int maxOfCursorAndSeekbar = Math.max(mSeekbarHeight, maxOfCursor);
         // So we get the needed height.
         int heightNeeded = maxOfCursorAndSeekbar + mMarginBetween + mTextSize
@@ -677,7 +677,7 @@ public class RangeSeekbar extends View {
             // Check whether left and right cursor will collision.
             if (mLeftCursorRect.right + deltaX >= mRightCursorRect.left) {
                 // Check whether right cursor is in "Touch" mode( if in touch
-                // mode, represent that we can not move it at will), or right
+                // mode, represent that we can not move it at all), or right
                 // cursor reach the boundary.
                 if (mRightHited || mRightCursorIndex == mTextArray.length - 1
                         || mRightScroller.computeScrollOffset()) {
