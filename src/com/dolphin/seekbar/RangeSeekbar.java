@@ -813,9 +813,16 @@ public class RangeSeekbar extends View {
     }
 
     public void setLeftSelection(int partIndex) {
-        if (partIndex >= mTextArray.length - 1 || partIndex <= 0) {
+        if (partIndex >= mTextArray.length - 1 || partIndex < 0) {
             throw new IllegalArgumentException(
                     "Index should from 0 to size of text array minus 2!");
+        }
+
+        // if not initialized, just record the location
+        if (mPartLength == 0) {
+            mLeftCursorIndex = partIndex;
+
+            return;
         }
 
         if (partIndex != mLeftCursorIndex) {
@@ -844,9 +851,16 @@ public class RangeSeekbar extends View {
     }
 
     public void setRightSelection(int partIndex) {
-        if (partIndex >= mTextArray.length || partIndex <= 0) {
+        if (partIndex > mTextArray.length - 1 || partIndex <= 1) {
             throw new IllegalArgumentException(
                     "Index should from 1 to size of text array minus 1!");
+        }
+
+        // if not initialized, just record the location
+        if (mPartLength == 0) {
+            mRightCursorIndex = partIndex;
+
+            return;
         }
 
         if (partIndex != mRightCursorIndex) {
