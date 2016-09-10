@@ -1,17 +1,38 @@
 package com.dolphin.seekbar;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+
 import com.dolphin.multitouchseekbar.R;
 
-import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
-
 public class MainActivity extends Activity {
+
+    RangeSeekbar mSeekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mSeekBar = (RangeSeekbar) findViewById(R.id.seekbar);
+        mSeekBar.setLeftSelection(2);
+        mSeekBar.setRightSelection(4);
+
+        findViewById(R.id.set_left).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSeekBar.setLeftSelection(0);
+            }
+        });
+
+        findViewById(R.id.set_right).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mSeekBar.setRightSelection(5);
+            }
+        });
     }
 
     @Override
