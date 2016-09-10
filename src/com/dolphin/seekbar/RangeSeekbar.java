@@ -276,9 +276,16 @@ public class RangeSeekbar extends View {
         // So we get the needed height.
         int heightNeeded = maxOfCursorAndSeekbar + mMarginBetween + mTextSize
                 + mPaddingRect.top + mPaddingRect.bottom;
-
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(
-                Math.max(heightSize, heightNeeded), MeasureSpec.EXACTLY);
+        
+        if (heightMode == MeasureSpec.EXACTLY) {
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize, MeasureSpec.EXACTLY);
+        } else if (heightMode == MeasureSpec.AT_MOST) {
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(
+                    heightSize < heightNeeded ? heightSize : heightNeeded, MeasureSpec.EXACTLY);
+        } else {
+            heightMeasureSpec = MeasureSpec.makeMeasureSpec(
+                    heightNeeded, MeasureSpec.EXACTLY);
+        }
 
         final int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 
