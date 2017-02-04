@@ -265,7 +265,8 @@ public class RangeSeekbar extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-
+        final int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+            
         final int leftPointerH = mLeftCursorBG.getIntrinsicHeight();
         final int rightPointerH = mRightCursorBG.getIntrinsicHeight();
 
