@@ -30,12 +30,12 @@ Other supported:
 		2. setRightSelection(int index):Set right cursor to any of text mark(besides the first one).
 		3. setOnCursorChangeListener:   Set it to listen when left cursor or right cursor is located on new index.
 		
-###Developed by:
+### Developed by:
 Roy Wang (dolphinwang@foxmail.com)
 
 If you use this lib. Please let me know.
 
-###License:
+### License:
 Copyright 2014 Roy Wang
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
